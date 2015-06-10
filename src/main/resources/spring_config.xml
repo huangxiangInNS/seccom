@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemaLocation="  
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+    http://www.springframework.org/schema/tx  
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    ">
+     
+     <!-- enable autowire -->
+	<context:annotation-config />
+	
+	<!-- enable annotation handler mapping -->
+	<mvc:annotation-driven/>
+
+	<!-- 定义数据源 -->
+     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url"  value="jdbc:mysql://192.168.1.142:3306/sec_uc" />
+        <property name="username" value="seccom_uc" />
+        <property name="password" value="netqin123" />
+    </bean>
+    
+    <!-- 定义事务管理器 -->
+    <bean id = "transactionManager" class = "org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name = "dataSource" ref = "dataSource"></property>
+    </bean>
+    
+    <!-- 声明使用注解式事务，使@Transactional生效 -->  
+	<tx:annotation-driven transaction-manager="transactionManager"/> 
+    
+    <!-- 这里需要将mapper的接口文件和实现文件（xml）文件放在一个目录类包目录下，
+    定义该bean可自动扫描目录，并将mapper自动生成bean对象注册到bean容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.nationsky.seccom.uc.dao" />
+    </bean>
+    
+    <!-- define the SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- 定义视图解析器 -->
+	<bean class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name = "prefix" value = "/"></property>
+		<property name = "suffix" value = ".jsp"></property>
+	</bean>
+
+	<!-- 支持请求返回json格式数据 -->
+	<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 拦截器设置开始 -->
+	<!-- 拦截所有的请求 -->	
+	<mvc:interceptors>
+		<bean class="com.nationsky.seccom.uc.interceptor.JsonValidationInterceptor" />
+	</mvc:interceptors>
+	<!-- 拦截器设置结束 -->
+
+	<!-- 添加自动扫描的包路径，spring会将这些包中带有@service @controller @component的类自动注册为bean对象。 -->
+	<context:component-scan base-package="com.nationsky.seccom.uc.service" />
+	<context:component-scan base-package="com.nationsky.seccom.uc.controller" />
+</beans>
