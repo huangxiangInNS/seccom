@@ -1,6 +1,8 @@
 package com.nationsky.seccom.uc.controller;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -256,6 +258,99 @@ public class UserController extends BaseController{
             result.setMessage("用户信息创建失败！");
         }
 
+        return response;
+    }
+
+
+    @RequestMapping(value = "/getSign", method = POST)
+    @ResponseBody
+    public Response<Map<String, Object>> getSign(HttpServletRequest httpRequest)
+    {
+		/*从json中得到请求数据*/
+        String json = getRequestJson(httpRequest);
+        System.out.println(json);
+        Gson gson = new Gson();
+        Request<LoginInfoRequestData> request =
+                gson.fromJson(json, new Json2Request<Request<LoginInfoRequestData>>() {
+                }.getType());
+
+        /*设置返回数据体*/
+        Response<Map<String, Object>> response = new Response<Map<String, Object>>();
+        Result result = new Result();
+        response.setResult(result);
+        result.setRequestId(request.getOperId().getRequestId());
+
+        LoginInfoRequestData loginInfoRequestData = request.getRequestData();
+        try
+        {
+            String userId = loginInfoRequestData.getUserId();
+            Map<String, Object> responseData = new HashMap<String, Object>();
+            String sign = userService.getSign(userId);
+            responseData.put("sign", sign);
+            result.setCode("0");
+            result.setMessage("获取用户签名成功！");
+            LoginInfoResponseData loginInfoResponseData = new LoginInfoResponseData();
+            loginInfoResponseData.setUserId(userId);
+            response.setResponseData(responseData);
+        }
+        catch (RuntimeException e)
+        {
+            Logger logger = Logger.getLogger(this.getClass());
+            logger.error(e.getMessage());
+            result.setCode("1");
+            result.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+
+    @RequestMapping(value = "/updateSign", method = POST)
+    @ResponseBody
+    public Response<Map<String, Object>> updateSign(HttpServletRequest httpRequest)
+    {
+		/*从json中得到请求数据*/
+        String json = getRequestJson(httpRequest);
+        System.out.println(json);
+        Gson gson = new Gson();
+        Request<Map<String, Object>> request =
+                gson.fromJson(json, new Json2Request<Request<Map<String, Object>>>() {
+                }.getType());
+
+        /*设置返回数据体*/
+        Response<Map<String, Object>> response = new Response<Map<String, Object>>();
+        Result result = new Result();
+        response.setResult(result);
+        result.setRequestId(request.getOperId().getRequestId());
+
+        try
+        {
+            /*从请求体中获取请求数据*/
+            Map<String, Object> requestData = request.getRequestData();
+            String userId = (String)requestData.get("userId");
+            String sign = (String)requestData.get("sign");
+            boolean signSettingResult = userService.setSign(userId, sign);
+            if (signSettingResult)
+            {
+                Logger logger = Logger.getLogger(this.getClass());
+                logger.info("更新用户签名成功！");
+                result.setCode("0");
+                result.setMessage("更新用户签名成功！");
+            }
+            else
+            {
+                Logger logger = Logger.getLogger(this.getClass());
+                logger.error("找到用户，但更新用户签名失败！");
+                result.setCode("1");
+                result.setMessage("更新用户签名成功！");
+            }
+        }
+        catch (RuntimeException e)
+        {
+            Logger logger = Logger.getLogger(this.getClass());
+            logger.error(e.getMessage());
+            result.setCode("1");
+            result.setMessage(e.getMessage());
+        }
         return response;
     }
 }

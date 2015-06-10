@@ -301,4 +301,40 @@ public class UserServiceImpl implements IUserService {
             }
         }
     }
+
+    @Override
+    public String getSign(String userId) {
+        UserIdLoginAccountRelationExample example = new UserIdLoginAccountRelationExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<UserIdLoginAccountRelation> relations =
+                userIdLoginAccountRelationMapper.selectByExample(example);
+        if (relations.size() == 0)
+        {
+            throw new RuntimeException("没有找到指定的用户");
+        }
+        else
+        {
+            return relations.get(0).getPersonSign();
+        }
+    }
+
+
+    public boolean setSign(String userId, String sign)
+    {
+        UserIdLoginAccountRelationExample example = new UserIdLoginAccountRelationExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<UserIdLoginAccountRelation> relations =
+                userIdLoginAccountRelationMapper.selectByExample(example);
+        if (relations.size() == 0)
+        {
+            throw new RuntimeException("没有找到指定的用户！");
+        }
+        else
+        {
+            UserIdLoginAccountRelation relation = relations.get(0);
+            relation.setPersonSign(sign);
+            userIdLoginAccountRelationMapper.updateByPrimaryKey(relation);
+            return true;
+        }
+    }
 }

@@ -14,4 +14,6 @@ public interface IUserService {
 	UserBasicInfo getUserBasicInfoByUserId(String userId);
 	String createLoginInfo(LoginInfoRequestData loginInfoRequestData);
 	String checkLoginInfo(LoginInfoRequestData loginInfoRequestData);
+	String getSign(String userId);
+    boolean setSign(String userId, String sign);
 }
