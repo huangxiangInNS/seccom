@@ -1,8 +1,12 @@
 package com.nationsky.seccom.uc.service.implement;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import com.nationsky.seccom.uc.dao.DeptBasicInfoMapper;
+import com.nationsky.seccom.uc.dao.DeptRelationMapper;
+import com.nationsky.seccom.uc.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +17,6 @@ import com.nationsky.seccom.uc.dao.CompanyRelationMapper;
 import com.nationsky.seccom.uc.domain.CompanyRequestData;
 import com.nationsky.seccom.uc.domain.CompanyResponseData;
 import com.nationsky.seccom.uc.domain.DeptRequestData;
-import com.nationsky.seccom.uc.model.CompanyInfo;
-import com.nationsky.seccom.uc.model.CompanyRelation;
-import com.nationsky.seccom.uc.model.CompanyRelationExample;
 import com.nationsky.seccom.uc.service.ICompanyService;
 import com.nationsky.seccom.uc.service.IDeptService;
 import com.nationsky.seccom.uc.util.ServiceUtil;
@@ -27,6 +28,12 @@ public class CompanyServiceImpl implements ICompanyService {
 	private CompanyInfoMapper companyInfoMapper;
 	@Autowired
 	private CompanyRelationMapper companyRelationMapper;
+
+	@Autowired
+	private DeptRelationMapper deptRelationMapper;
+
+	@Autowired
+	private DeptBasicInfoMapper deptBasicInfoMapper;
 	
 	@Autowired
 	private IDeptService deptService;
@@ -82,7 +89,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		}
 	}
 
-	public Date udpateCompanyInfo(CompanyInfo companyInfo) {
+	public Date updateCompanyInfo(CompanyInfo companyInfo) {
 
 		if (companyInfo  == null)
 		{
@@ -140,6 +147,34 @@ public class CompanyServiceImpl implements ICompanyService {
 				return companyResponseData;
 			}
 		}
+	}
+
+	@Override
+	public DeptBasicInfo getRootDept(String companyId) {
+
+		/*找出部门关系中上级部门id为ROOT的部门*/
+		DeptRelationExample deptRelationExample = new DeptRelationExample();
+		deptRelationExample.createCriteria().andAncestorDeptIdEqualTo("ROOT");
+		List<DeptRelation> deptRelations =
+				deptRelationMapper.selectByExample(deptRelationExample);
+		Iterator<DeptRelation> iterator = deptRelations.iterator();
+
+		/*在得到的部门中比对公司id是否和指定的公司id相同*/
+		while (iterator.hasNext())
+		{
+			String deptId = iterator.next().getDescendantDeptId();
+			DeptBasicInfoExample deptBasicInfoExample = new DeptBasicInfoExample();
+			deptBasicInfoExample.createCriteria().andDeptIdEqualTo(deptId)
+					.andCompanyIdEqualTo(companyId);
+			int count = deptBasicInfoMapper.countByExample(deptBasicInfoExample);
+			if (count != 0)
+			{
+				List<DeptBasicInfo> deptBasicInfos = deptBasicInfoMapper
+						.selectByExample(deptBasicInfoExample);
+				return deptBasicInfos.get(0);
+			}
+		}
+		return null;
 	}
 
 	@Transactional

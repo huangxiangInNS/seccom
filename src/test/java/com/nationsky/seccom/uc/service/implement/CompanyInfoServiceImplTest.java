@@ -43,12 +43,12 @@ public class CompanyInfoServiceImplTest {
 		companyInfo.setCompanyId("00010001");
 		companyInfo.setCompanyName("nationsky22");
 		
-		assertNull(companyService.udpateCompanyInfo(companyInfo));
+		assertNull(companyService.updateCompanyInfo(companyInfo));
 		
 		companyInfo.setCompanyId("00010002");
 		companyInfo.setCompanyName("nationsky2");
 		
-		assertNull(companyService.udpateCompanyInfo(companyInfo));
+		assertNull(companyService.updateCompanyInfo(companyInfo));
 	}
 
 	@Test

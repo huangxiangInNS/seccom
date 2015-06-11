@@ -33,7 +33,7 @@ public class DeptServiceImpl implements IDeptService {
 	@Autowired
 	private DeptRelationMapper deptRelationMapper; // 自动注入部门关系mapper。
 
-	public String addDeptBasicInfo(DeptBasicInfo departmentBasicInfo) {
+	private String addDeptBasicInfo(DeptBasicInfo departmentBasicInfo) {
 
 		if (departmentBasicInfo == null)
 		{
@@ -70,15 +70,8 @@ public class DeptServiceImpl implements IDeptService {
 		else 
 		{
 			int updateCount = deptBasicInfoMapper.deleteByPrimaryKey(deptId);
-			
-			if (updateCount == 0)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+
+			return updateCount != 0;
 		}
 	}
 
@@ -214,17 +207,17 @@ public class DeptServiceImpl implements IDeptService {
 	@Transactional
 	public boolean addDescendantDept(String deptId, String ancestorDeptId)
 	{
-		int updateCount = 0;
+		int updateCount;
 		/*插入部门关系*/
 		DeptRelation deptRelation = new DeptRelation();
 		
-		if (ancestorDeptId != null && ancestorDeptId.isEmpty() != true)
+		if (ancestorDeptId != null && !ancestorDeptId.isEmpty())
 		{
 			/*检查要添加的子部门是否已经存在*/
 			DeptRelationExample checkingExistingDeptExample = new DeptRelationExample();
 			checkingExistingDeptExample.createCriteria().andDescendantDeptIdEqualTo(deptId);
 			List<DeptRelation> deptRelations = deptRelationMapper.selectByExample(checkingExistingDeptExample);
-			if (deptRelations.isEmpty() == false)
+			if (!deptRelations.isEmpty())
 			{
 				throw new RuntimeException("子部门已经存在！");
 			}
@@ -235,7 +228,7 @@ public class DeptServiceImpl implements IDeptService {
 			DeptRelationExample deptExample = new DeptRelationExample();
 			deptExample.createCriteria().andDescendantDeptIdEqualTo(ancestorDeptId);
 			deptRelations = deptRelationMapper.selectByExample(deptExample);
-			if (deptRelations.isEmpty() == true)
+			if (deptRelations.isEmpty())
 			{
 				throw new RuntimeException("无法找到指定的上级部门！");
 			}
@@ -310,7 +303,7 @@ public class DeptServiceImpl implements IDeptService {
 		else
 		{
 			boolean deptAdditionResult = addDescendantDept(deptId, ancestorDeptId);
-			if (deptAdditionResult == false)
+			if (!deptAdditionResult)
 			{
 				throw new RuntimeException("添加部门关系失败！");
 			}
@@ -332,29 +325,14 @@ public class DeptServiceImpl implements IDeptService {
 		boolean rmResult = false;
 		rmResult = deleteDeptBasicInfoByDeptId(deptId);
 		
-		if (rmResult == false)
+		if (!rmResult)
 		{
 			return false;
 		}
 		else
 		{
 			rmResult = deleteDeptRelation(deptId);
-			if (rmResult == false)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return rmResult;
 		}
-	}
-	
-
-	public List<DeptBasicInfo> getRootDept(String companyId)
-	{
-		DeptBasicInfoExample selectRootDeptExample = new DeptBasicInfoExample();
-		selectRootDeptExample.createCriteria().andCompanyIdEqualTo(companyId);
-		return deptBasicInfoMapper.selectByExample(selectRootDeptExample);
 	}
 }

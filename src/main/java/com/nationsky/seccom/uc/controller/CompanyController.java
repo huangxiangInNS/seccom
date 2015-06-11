@@ -157,7 +157,7 @@ public class CompanyController extends BaseController
 		
 		/*从请求体中获取更新的公司信息*/
 		CompanyInfo companyInfo = request.getRequestData();
-		Date updateDate = companyService.udpateCompanyInfo(companyInfo);
+		Date updateDate = companyService.updateCompanyInfo(companyInfo);
 		if (updateDate == null)
 		{
 			result.setCode("1");
