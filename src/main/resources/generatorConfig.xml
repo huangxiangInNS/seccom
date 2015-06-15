@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration> <!--classPathEntry用于设置数据库驱动包位置--> <classPathEntry location="/home/huangxiang/document/seccom/uc/MBG/mysql-connector-java-5.1.25.jar" /> <!--context元素用于指定生成一组对象的环境,id是唯一的标识符。targetRuntime此属性用于指定生成的代码的运行时目标。 该属性支持这些特殊的值：MyBatis3 使用这值的时候我们能得到带有byexample的方法和注解的形式。默认我们使用这个值-->
+    <context id="sec_uc" targetRuntime="MyBatis3">
+        <!--用于指定数据库驱动包的名字和数据库的链接信息，不同的数据库的connectionURL形式不一样-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://192.168.1.142:3306/sec_uc"
+            userId="seccom_uc"
+            password="netqin123">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+          <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!--targetPackage用于指定生成的model（表对应的JAVA实体）类的完整包名，targetProject 用于指定model类存放的路径-->
+        <javaModelGenerator targetPackage="com.nationsky.seccom.uc.model" targetProject="src/main/java">
+          <property name="enableSubPackages" value="true" />
+          <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!--targetPackage用于指定生成的mapper类的完整包名，targetProject 用于指定mapper类存放的路径-->
+        <sqlMapGenerator targetPackage="com.nationsky.seccom.uc.dao"  targetProject="src/main/java">
+          <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!--javaClientGenerator元素用于定义 Java 客户端代码生成器的属性, 如果该元素的type属性为XMLMAPPER，那么mapper接口和XML映射（实现）文件-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.nationsky.seccom.uc.dao"  targetProject="src/main/java">
+          <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!--以下用于指定需要自动生成代码的数据库名和表名，其中domainObjectName用于指定表所对应的Java类的类名-->
+        <table schema="sc_uc" tableName="sc_uc_user_job" domainObjectName="JobDict"/>
+        <table schema="sc_uc" tableName="sc_uc_login" domainObjectName="UserIdLoginAccountRelation"/>
+        <table schema="sc_uc" tableName="sc_uc_login" domainObjectName="CompanyInfo" />
+        <table schema="sc_uc" tableName="sc_uc_company_relation" domainObjectName="CompanyRelation" />
+        <table schema="sc_uc" tableName="sc_uc_dept_basic" domainObjectName="DeptBasicInfo" />
+        <table schema="sc_uc" tableName="sc_uc_dept_relation" domainObjectName="DeptRelation" />
+        <table schema="sc_uc" tableName="sc_uc_user_dept" domainObjectName="UserDeptRelation" />
+  </context>
+</generatorConfiguration>

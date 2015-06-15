@@ -140,7 +140,6 @@
 	    <artifactId>javax.servlet-api</artifactId>
 	    <version>3.1.0</version>
     </dependency>
-
   </dependencies>
   
   <build>
@@ -152,8 +151,35 @@
                   <source>1.6</source>
                   <target>1.6</target>
               </configuration>
-          </plugin>
-      </plugins>
+		  </plugin>
+
+		  <plugin>
+			  <groupId>org.mybatis.generator</groupId>
+			  <artifactId>mybatis-generator-maven-plugin</artifactId>
+			  <version>1.3.2</version>
+			  <configuration>
+				  <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
+				  <verbose>true</verbose>
+				  <overwrite>true</overwrite>
+			  </configuration>
+			  <executions>
+				  <execution>
+					  <id>Generate MyBatis Artifacts</id>
+					  <goals>
+						  <goal>generate</goal>
+					  </goals>
+				  </execution>
+			  </executions>
+			  <dependencies>
+				  <dependency>
+					  <groupId>org.mybatis.generator</groupId>
+					  <artifactId>mybatis-generator-core</artifactId>
+					  <version>1.3.2</version>
+				  </dependency>
+			  </dependencies>
+		  </plugin>
+
+	  </plugins>
 
       <!-- 由于mapper 对应的xml实现文件在java文件夹下，
       而war包默认只打包该目录下的.class文件，
