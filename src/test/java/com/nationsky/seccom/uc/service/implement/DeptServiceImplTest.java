@@ -34,8 +34,6 @@ public class DeptServiceImplTest extends DeptServiceImpl {
 		deptBasicInfo.setDeptOrder(3);
 		deptBasicInfo.setDeptOrder(1);
 		deptBasicInfo.setDeptLeaderId("1234");
-
-		assertNotNull(deptService.addDeptBasicInfo(deptBasicInfo));
 		
 	}
 
@@ -74,7 +72,7 @@ public class DeptServiceImplTest extends DeptServiceImpl {
 		DeptRequestData deptRequestData = new DeptRequestData();
 		deptRequestData.setAncestorDeptId("12223");
 		deptRequestData.setCompanyId("22222");
-		deptRequestData.setDeptName("hhafhadhfaf");
+		deptRequestData.setDeptName("Seccom");
 		deptRequestData.setDeptOrder(2);
 		assertNotNull(deptService.addDept(deptRequestData));
 	}

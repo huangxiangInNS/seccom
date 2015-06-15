@@ -52,7 +52,7 @@ public class CompanyServiceImpl implements ICompanyService {
 			
 			boolean relationAdditionResult = addCompanyRelation(ancestorCompanyId, descendantCompanyId);
 			
-			if (relationAdditionResult == false)
+			if (!relationAdditionResult)
 			{
 				throw new RuntimeException("添加公司关系失败！");
 			}
@@ -77,15 +77,8 @@ public class CompanyServiceImpl implements ICompanyService {
 		else
 		{
 			int updateCount = companyInfoMapper.deleteByPrimaryKey(companyId);
-			
-			if (updateCount ==1)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+
+			return updateCount == 1;
 		}
 	}
 
@@ -190,7 +183,7 @@ public class CompanyServiceImpl implements ICompanyService {
 			CompanyRelationExample checkExistingDescendantCompanyId = new CompanyRelationExample();
 			checkExistingDescendantCompanyId.createCriteria().andDescendantCompanyIdEqualTo(descendantCompanyId);
 			List<CompanyRelation> companyRelations = companyRelationMapper.selectByExample(checkExistingDescendantCompanyId);
-			if (companyRelations.isEmpty() == false)
+			if (!companyRelations.isEmpty())
 			{
 				throw new RuntimeException("子公司已经存在！");
 			}

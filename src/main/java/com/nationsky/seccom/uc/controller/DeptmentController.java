@@ -266,38 +266,4 @@ public class DeptmentController extends BaseController
 		}
 		return response;
 	}
-	
-	
-	@RequestMapping(value = "/getRootDept", method = POST)
-	@ResponseBody
-	public Response<List<DeptBasicInfo>> getRootDept(HttpServletRequest httpRequest) 
-	{
-		/*将请求json数据转换成相应的请求体*/
-		String json = getRequestJson(httpRequest);
-		System.out.println(json);
-		Gson gson = new Gson();
-		Request<DeptBasicInfo> request =
-				gson.fromJson(json, new Json2Request<Request<DeptBasicInfo>>(){}.getType());
-		
-		/*生成响应体*/
-		Response<List<DeptBasicInfo>> response = new Response<List<DeptBasicInfo>>();
-		Result result = new Result();
-		response.setResult(result);
-		
-		String companyId = request.getRequestData().getCompanyId();
-		List<DeptBasicInfo> rootDepts = deptService.getRootDept(companyId);
-		
-		if (rootDepts == null)
-		{
-			result.setCode("1");
-			result.setMessage("根部门为空！");
-		}
-		else
-		{
-			result.setCode("0");
-			result.setMessage("根部门获取成功！");
-			response.setResponseData(rootDepts);
-		}
-		return response;
-	}
 }

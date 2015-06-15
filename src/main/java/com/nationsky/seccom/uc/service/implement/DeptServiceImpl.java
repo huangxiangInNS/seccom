@@ -247,7 +247,8 @@ public class DeptServiceImpl implements IDeptService {
 				}
 			}
 		}
-		// 父级部门为空则生成一个root部门
+		// 父级部门为空则生成一个记录，该记录所表示的部门关系的上级部门的id为特定字符"ROOT",
+        // 路径的深度为1.
 		else
 		{
 			deptRelation.setAncestorDeptId("ROOT");
