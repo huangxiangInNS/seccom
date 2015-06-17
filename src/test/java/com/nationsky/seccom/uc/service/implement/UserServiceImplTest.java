@@ -92,4 +92,14 @@ public class UserServiceImplTest
 //		assertNull(userService.createLoginInfo(userRequestData, "xxxxxx"));
 	}
 
+	@Test
+    public void testSetNewPassword()
+    {
+        String userId = "VZFZKLnSE8sNj6FCL6tV";
+        String loginName = "huangxiang";
+        String newPassword = "666666";
+
+        userService.setNewPassword(userId, loginName, newPassword);
+    }
+
 }

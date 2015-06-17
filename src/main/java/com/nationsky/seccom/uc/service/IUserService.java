@@ -16,4 +16,5 @@ public interface IUserService {
 	String checkLoginInfo(LoginInfoRequestData loginInfoRequestData);
 	String getSign(String userId);
     boolean setSign(String userId, String sign);
+	void setNewPassword(String userId, String loginName, String newPassword);
 }

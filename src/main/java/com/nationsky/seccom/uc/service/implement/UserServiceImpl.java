@@ -337,4 +337,33 @@ public class UserServiceImpl implements IUserService {
             return true;
         }
     }
+
+	@Override
+	public void setNewPassword(String userId, String loginName, String newPassword) {
+		UserIdLoginAccountRelationExample example =
+				new UserIdLoginAccountRelationExample();
+		example.createCriteria().andUserIdEqualTo(userId).andLoginNameEqualTo(loginName);
+		List<UserIdLoginAccountRelation> relations =
+				userIdLoginAccountRelationMapper.selectByExample(example);
+
+        // 输入的登录名或用户id有错误
+		if (relations.size() == 0)
+		{
+			throw new RuntimeException("没有找到指定用户或登录帐号！");
+		}
+		else
+		{
+			UserIdLoginAccountRelation relation = relations.get(0);
+			relation.setPassword(newPassword);
+
+			int updateCount = 0;
+			updateCount =
+					userIdLoginAccountRelationMapper.updateByPrimaryKey(relation);
+
+			if (updateCount != 1)
+			{
+				throw new RuntimeException("登录密码更新失败！");
+			}
+		}
+	}
 }
