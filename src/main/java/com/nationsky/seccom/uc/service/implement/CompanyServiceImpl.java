@@ -134,7 +134,7 @@ public class CompanyServiceImpl implements ICompanyService {
 				companyResponseData.setCompanyUrl(companyInfo.getCompanyUrl());
 				companyResponseData.setCreateTime(companyInfo.getCreateTime());
 				companyResponseData.setUpdateTime(companyInfo.getUpdateTime());
-				companyResponseData.setLdapConfigIndex(companyInfo.getLdapConfigId());
+				companyResponseData.setLdapConfigIndex(companyInfo.getLdapConfigIndex());
 				companyResponseData.setStatus(companyInfo.getStatus());
 				
 				return companyResponseData;
