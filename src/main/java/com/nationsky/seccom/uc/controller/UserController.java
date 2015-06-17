@@ -327,29 +327,23 @@ public class UserController extends BaseController{
             /*从请求体中获取请求数据*/
             Map<String, Object> requestData = request.getRequestData();
             String userId = (String)requestData.get("userId");
+			String loginName = (String)requestData.get("loginName");
             String sign = (String)requestData.get("sign");
-            boolean signSettingResult = userService.setSign(userId, sign);
-            if (signSettingResult)
-            {
-                Logger logger = Logger.getLogger(this.getClass());
-                logger.info("更新用户签名成功！");
-                result.setCode("0");
-                result.setMessage("更新用户签名成功！");
-            }
-            else
-            {
-                Logger logger = Logger.getLogger(this.getClass());
-                logger.error("找到用户，但更新用户签名失败！");
-                result.setCode("1");
-                result.setMessage("更新用户签名成功！");
-            }
+            userService.setSign(userId, loginName, sign);
+
+			Logger logger = Logger.getLogger(this.getClass());
+			logger.info("更新用户签名成功！");
+
+			result.setCode("0");
+			result.setMessage("更新用户签名成功！");
         }
         catch (RuntimeException e)
         {
-            Logger logger = Logger.getLogger(this.getClass());
-            logger.error(e.getMessage());
-            result.setCode("1");
-            result.setMessage(e.getMessage());
+			Logger logger = Logger.getLogger(this.getClass());
+			logger.error(e.getMessage());
+
+			result.setCode("1");
+			result.setMessage("更新用户签名失败！");
         }
         return response;
     }

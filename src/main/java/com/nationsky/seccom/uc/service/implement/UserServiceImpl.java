@@ -319,22 +319,27 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    public boolean setSign(String userId, String sign)
+    public void setSign(String userId, String loginName, String newSign)
     {
         UserIdLoginAccountRelationExample example = new UserIdLoginAccountRelationExample();
-        example.createCriteria().andUserIdEqualTo(userId);
+        example.createCriteria().andUserIdEqualTo(userId).andLoginNameEqualTo(loginName);
         List<UserIdLoginAccountRelation> relations =
                 userIdLoginAccountRelationMapper.selectByExample(example);
         if (relations.size() == 0)
         {
-            throw new RuntimeException("没有找到指定的用户！");
+            throw new RuntimeException("没有找到指定的用户或登录名！");
         }
         else
         {
             UserIdLoginAccountRelation relation = relations.get(0);
-            relation.setPersonSign(sign);
-            userIdLoginAccountRelationMapper.updateByPrimaryKey(relation);
-            return true;
+            relation.setPersonSign(newSign);
+
+            int updateCount =
+                    userIdLoginAccountRelationMapper.updateByPrimaryKey(relation);
+            if (updateCount != 1)
+            {
+                throw new RuntimeException("数据库更新个人签名字段失败！");
+            }
         }
     }
 

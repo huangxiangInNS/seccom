@@ -102,4 +102,13 @@ public class UserServiceImplTest
         userService.setNewPassword(userId, loginName, newPassword);
     }
 
+    @Test
+    public void testSetSign()
+    {
+        String userId = "VZFZKLnSE8sNj6FCL6tVx";
+        String loginName = "huangxiang";
+        String newSign = "测试更新个性签名";
+        userService.setSign(userId, loginName, newSign);
+    }
+
 }

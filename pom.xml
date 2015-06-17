@@ -179,6 +179,7 @@
 					  <goals>
 						  <goal>generate</goal>
 					  </goals>
+					  <phase>none</phase>
 				  </execution>
 			  </executions>
 			  <dependencies>
