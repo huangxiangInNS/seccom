@@ -1,0 +1,6 @@
+#!/usr/bin/expect
+set timeout 30
+spawn scp uc.war root@192.168.1.142:/usr/local/tomcat7/webapps
+expect "root@192.168.1.142's password:" {send "nq1234\n"}
+expect "*100%"
+expect eof

@@ -1,0 +1,5 @@
+#!/usr/bin/expect
+spawn ssh root@192.168.1.142 "tail -f /usr/local/tomcat7/logs/catalina.out"
+expect "*password"
+send "nq1234\n"
+interact
