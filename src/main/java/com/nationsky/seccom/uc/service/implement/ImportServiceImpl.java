@@ -46,6 +46,9 @@ public class ImportServiceImpl implements IimportService {
     @Autowired
     private JobDictMapper jobDictMapper;
 
+    @Autowired
+    private BatchIntertMapper batchIntertMapper;
+
 
     /**
      * 公司id
@@ -53,6 +56,9 @@ public class ImportServiceImpl implements IimportService {
     private String companyId;
     private Hashtable<String, JobDict> userJobHashtable = new Hashtable<String, JobDict>();
     private Hashtable<String, DeptBasicInfo> deptList;
+    private List<UserBasicInfo> userList = new ArrayList<UserBasicInfo>();
+    private List<UserDeptRelation> userDeptList = new ArrayList<UserDeptRelation>();
+    private List<UserIdLoginAccountRelation> userAccountList = new ArrayList<UserIdLoginAccountRelation>();
 
 
     /**
@@ -142,12 +148,42 @@ public class ImportServiceImpl implements IimportService {
     }
 
 
+    private void batchInsert(UserBasicInfo userBasicInfo) {
+        userList.add(userBasicInfo);
+
+        if (userList.size() >= 30) {
+            batchIntertMapper.insertUserBatch(userList);
+            userList.clear();
+        }
+
+    }
+
+    private void batchInsert(UserDeptRelation userDeptRelation) {
+        userDeptList.add(userDeptRelation);
+
+        if (userDeptList.size() >= 30) {
+            batchIntertMapper.insertUserDeptBatch(userDeptList);
+            userDeptList.clear();
+        }
+
+    }
+
+    private void batchInsert(UserIdLoginAccountRelation userAccount) {
+        userAccountList.add(userAccount);
+
+        if (userAccountList.size() >= 30) {
+            batchIntertMapper.insertAccountBatch(userAccountList);
+            userAccountList.clear();
+        }
+
+    }
+
+
     private List<UserBasicInfo> readUserData(Sheet sheet) {
 
 
         if (sheet != null) {
 
-            List<UserBasicInfo> userList = new ArrayList<UserBasicInfo>();
             for (int i = 0; i <= sheet.getLastRowNum(); i++) {
                 /**
                  * 跳过首行
@@ -175,7 +211,6 @@ public class ImportServiceImpl implements IimportService {
                 userBasicInfo.setUserAddress(String.valueOf(row.getCell(8).getStringCellValue()));
                 userBasicInfo.setStatus("1");
                 userBasicInfo.setUserSource("1");
-                userList.add(userBasicInfo);
 
                 String userName = row.getCell(2).getStringCellValue();
                 String userJob = row.getCell(11).getStringCellValue();
@@ -185,7 +220,7 @@ public class ImportServiceImpl implements IimportService {
                 addUserIdLoginAccountRelation(userBasicInfo, userName);
                 addUserDeptRelation(userBasicInfo.getUserId(), deptName, userJob);
 
-                userBasicInfoMapper.insert(userBasicInfo);
+                batchInsert(userBasicInfo);
 
             }
 
@@ -204,8 +239,8 @@ public class ImportServiceImpl implements IimportService {
         userIdLoginAccountRelation.setLoginId(ServiceUtil.getRandomString(12));
         userIdLoginAccountRelation.setLoginName(userName);
         userIdLoginAccountRelation.setPassword("123456");
-        userIdLoginAccountRelationMapper.insert(userIdLoginAccountRelation);
-
+        //userIdLoginAccountRelationMapper.insert(userIdLoginAccountRelation);
+        batchInsert(userIdLoginAccountRelation);
     }
 
     private void addUserJobToList(String userJob) {
@@ -227,7 +262,9 @@ public class ImportServiceImpl implements IimportService {
         userDeptRelation.setJobId(userJobHashtable.get(userJob).getJobId());
         userDeptRelation.setPositionOrder(1);
         userDeptRelation.setStatus("1");
-        userDeptRelationMapper.insert(userDeptRelation);
+
+        batchInsert(userDeptRelation);
+        //userDeptRelationMapper.insert(userDeptRelation);
     }
 
 
@@ -357,7 +394,7 @@ public class ImportServiceImpl implements IimportService {
         File file = new File(deptFile);
 
         InputStream inputStream = null;
-        /*
+
         try {
             inputStream = new FileInputStream(file);
             Workbook workbook = WorkbookFactory.create(inputStream);
@@ -367,7 +404,7 @@ public class ImportServiceImpl implements IimportService {
             ApplicationContext ctx = new ClassPathXmlApplicationContext("./spring_config.xml");
 
             ImportServiceImpl importServiceImpl = (ImportServiceImpl) ctx.getBean("importServiceImpl");
-            importServiceImpl.importDept(sheet, "xxxccc");
+            //importServiceImpl.importDept(sheet, "xxxccc");
             //importServiceImpl.importUser(sheet, "xxxccc");
 
 
@@ -388,7 +425,7 @@ public class ImportServiceImpl implements IimportService {
         long end = System.currentTimeMillis();
 
         System.out.println(end - start);
-*/
+
 
         file = new File(userFile);
 
@@ -421,7 +458,7 @@ public class ImportServiceImpl implements IimportService {
         }
 
 
-        long end = System.currentTimeMillis();
+        end = System.currentTimeMillis();
 
         System.out.println(end - start);
 

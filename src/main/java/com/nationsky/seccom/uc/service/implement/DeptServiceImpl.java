@@ -1,9 +1,13 @@
 package com.nationsky.seccom.uc.service.implement;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
+import com.google.gson.Gson;
+import com.nationsky.seccom.uc.dao.UserBasicInfoMapper;
+import com.nationsky.seccom.uc.domain.DeptResponseData;
+import com.nationsky.seccom.uc.model.*;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,12 +16,6 @@ import com.nationsky.seccom.uc.dao.DeptBasicInfoMapper;
 import com.nationsky.seccom.uc.dao.DeptRelationMapper;
 import com.nationsky.seccom.uc.dao.UserDeptRelationMapper;
 import com.nationsky.seccom.uc.domain.DeptRequestData;
-import com.nationsky.seccom.uc.model.DeptBasicInfo;
-import com.nationsky.seccom.uc.model.DeptBasicInfoExample;
-import com.nationsky.seccom.uc.model.DeptRelation;
-import com.nationsky.seccom.uc.model.DeptRelationExample;
-import com.nationsky.seccom.uc.model.UserDeptRelation;
-import com.nationsky.seccom.uc.model.UserDeptRelationExample;
 import com.nationsky.seccom.uc.service.IDeptService;
 import com.nationsky.seccom.uc.util.ServiceUtil;
 
@@ -32,6 +30,9 @@ public class DeptServiceImpl implements IDeptService {
 	
 	@Autowired
 	private DeptRelationMapper deptRelationMapper; // 自动注入部门关系mapper。
+
+	@Autowired
+	private UserBasicInfoMapper userBasicInfoMapper; // 自动注入员工信息mapper.
 
 	private String addDeptBasicInfo(DeptBasicInfo departmentBasicInfo) {
 
@@ -99,23 +100,52 @@ public class DeptServiceImpl implements IDeptService {
 		}
 	}
 
-	public DeptBasicInfo getDepartmentBasicInfo(String deptId) {
+	public DeptResponseData getDepartmentBasicInfo(String deptId)
+    {
 		if (deptId == null)
 		{
 			return null;
 		}
 		else
 		{
-			return deptBasicInfoMapper.selectByPrimaryKey(deptId);
+			DeptBasicInfo deptBasicInfo = deptBasicInfoMapper.selectByPrimaryKey(deptId);
+			if (deptBasicInfo == null)
+			{
+				throw new RuntimeException("无法获取部门基本信息！");
+			}
+			String deptLeaderId = deptBasicInfo.getDeptLeaderId();
+			UserBasicInfo deptLeaderInfo = userBasicInfoMapper.selectByPrimaryKey(deptLeaderId);
+
+            DeptResponseData deptResponseData;
+			if (deptBasicInfo != null)
+			{
+                String deptLeaderName;
+				deptLeaderName = deptLeaderInfo.getRealName();
+                deptResponseData = new DeptResponseData();
+                try {
+                    PropertyUtils.copyProperties(deptResponseData, deptBasicInfo);
+                    deptResponseData.setDeptLeaderName(deptLeaderName);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+			}
+			else {
+				throw new RuntimeException("无法获取部门领导信息！");
+			}
+			return deptResponseData;
 		}
 	}
 	
-	public List<String> getAllUserIdOfDeptExcludiingSubDeptByDeptId(String deptId) throws IllegalArgumentException
+	public List<UserBasicInfo> getAllUsersOfDeptExcludingSubDeptByDeptId(String deptId)
 	{
 		/*检查参数*/
 		if (deptId == null)
 		{
-			throw new IllegalArgumentException();
+			return null;
 		}
 
 		/*创建查询条件*/
@@ -134,21 +164,25 @@ public class DeptServiceImpl implements IDeptService {
 		else
 		{
 			/*从查询得到的员工与部门的关系中提取出员工id*/
-			List<String> userIdList = new ArrayList<String>();
+			List<UserBasicInfo> users = new ArrayList<UserBasicInfo>();
 			for(UserDeptRelation userDeptRelationship : userRelationships)
 			{
-				userIdList.add(userDeptRelationship.getUserId());
+                String userId = userDeptRelationship.getUserId();
+                UserBasicInfo userBasicInfo =
+                        userBasicInfoMapper.selectByPrimaryKey(userId);
+
+                users.add(userBasicInfo);
 			}
-			return userIdList;
+			return users;
 		}
 	}
 	
 	
-	public List<String> getSubDepts(String deptId, int length) throws IllegalArgumentException
+	public List<DeptResponseData> getDesendentDepts(String deptId, int length)
 	{
 		if (length < 0)
 		{
-			throw new IllegalArgumentException();
+			return null;
 		}
 		else 
 		{
@@ -165,16 +199,17 @@ public class DeptServiceImpl implements IDeptService {
 				{
 					return null;
 				}
-				else 
+				else
 				{
-					List<String> deptIds = new ArrayList<String>();
+					List<DeptResponseData> depts = new ArrayList<DeptResponseData>();
 
-					/*提取关系中的deptId*/
 					for (DeptRelation deptRelation : deptRelations)
 					{
-						deptIds.add(deptRelation.getDescendantDeptId());
+                        String descendantDeptId = deptRelation.getDescendantDeptId();
+                        DeptResponseData deptResponseData = getDepartmentBasicInfo(descendantDeptId);
+                        depts.add(deptResponseData);
 					}
-					return deptIds;
+					return depts;
 				}
 			}
 			/*路径长度大于零*/
@@ -191,21 +226,86 @@ public class DeptServiceImpl implements IDeptService {
 				}
 				else 
 				{
-					List<String> deptIds = new ArrayList<String>();
+                    List<DeptResponseData> depts = new ArrayList<DeptResponseData>();
 
 					/*提取关系中的deptId*/
 					for (DeptRelation deptRelation : deptRelations)
 					{
-						deptIds.add(deptRelation.getDescendantDeptId());
+                        String descendantDeptId = deptRelation.getDescendantDeptId();
+                        DeptResponseData deptResponseData = getDepartmentBasicInfo(descendantDeptId);
+                        depts.add(deptResponseData);
 					}
-					return deptIds;
+					return depts;
 				}
 			}
 		}
 	}
-	
-	@Transactional
-	public boolean addDescendantDept(String deptId, String ancestorDeptId)
+
+    @Override
+    public int countList(DeptBasicInfoExample deptBasicInfoExample) {
+        return deptBasicInfoMapper.countByExample(deptBasicInfoExample);
+    }
+
+    @Override
+    public List<DeptResponseData> findList(DeptBasicInfoExample deptBasicInfoExample) {
+        List<DeptBasicInfo> deptBasicInfoList =
+                deptBasicInfoMapper.selectByExample(deptBasicInfoExample);
+        List<DeptResponseData> deptInfos;
+        if (deptBasicInfoList != null)
+        {
+            deptInfos = new ArrayList<DeptResponseData>();
+            DeptResponseData deptResponseData;
+            for (DeptBasicInfo deptBasicInfo : deptBasicInfoList)
+            {
+                deptResponseData = new DeptResponseData();
+                try {
+                    PropertyUtils.copyProperties(deptResponseData, deptBasicInfo);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+                String deptLeaderId = deptBasicInfo.getDeptLeaderId();
+                UserBasicInfo deptLeaderInfo = userBasicInfoMapper.selectByPrimaryKey(deptLeaderId);
+                if (deptLeaderInfo != null)
+                {
+                    deptResponseData.setDeptLeaderName(deptLeaderInfo.getRealName());
+                    deptInfos.add(deptResponseData);
+                }
+                else
+                {
+                    throw new RuntimeException("找不到指定的部门领导信息！");
+                }
+
+            }
+            return deptInfos;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public DeptResponseData getDepartmentBasicInfo(DeptBasicInfoExample deptBasicInfoExample) {
+        return this.findList(deptBasicInfoExample).get(0);
+    }
+
+    @Override
+    public String getPrimaryDesendentDeptAndUsers(String deptId) {
+        List<DeptResponseData> depts = this.getDesendentDepts(deptId, 1);
+        List<UserBasicInfo> users = this.getAllUsersOfDeptExcludingSubDeptByDeptId(deptId);
+        Map<String, Object> deptsAndUsers = new HashMap<String, Object>();
+        deptsAndUsers.put("depts", depts);
+        deptsAndUsers.put("users", users);
+        Gson gson = new Gson();
+        return gson.toJson(deptsAndUsers);
+    }
+
+    @Transactional
+	private boolean addDescendantDept(String deptId, String ancestorDeptId)
 	{
 		int updateCount;
 		/*插入部门关系*/

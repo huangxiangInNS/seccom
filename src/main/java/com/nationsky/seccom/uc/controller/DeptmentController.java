@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.validator.PublicClassValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +73,7 @@ public class DeptmentController extends BaseController
 	
 	@RequestMapping(value = "/getDept", method = POST)
 	@ResponseBody
-	public Response<DeptBasicInfo> getDept(
+	public Response<DeptResponseData> getDept(
 			HttpServletRequest httpRequest)
 	{
 		/*将请求json数据转换成相应的请求体*/
@@ -85,16 +84,16 @@ public class DeptmentController extends BaseController
 				gson.fromJson(json, new Json2Request<Request<DeptRequestData>>(){}.getType());
 
 		/*生成响应体*/
-		Response<DeptBasicInfo> response = new Response<DeptBasicInfo>();
+		Response<DeptResponseData> response = new Response<DeptResponseData>();
 		Result result = new Result();
 		response.setResult(result);
 		
 		
 		/*获得部门基本信息*/
 		String deptId = request.getRequestData().getDeptId();
-		DeptBasicInfo deptBasicInfo = deptService.getDepartmentBasicInfo(deptId);
+		DeptResponseData deptResponseData = deptService.getDepartmentBasicInfo(deptId);
 		
-		if (deptBasicInfo == null)
+		if (deptResponseData == null)
 		{
 			result.setCode("1");
 			result.setMessage("获取部门信息失败！");
@@ -103,7 +102,7 @@ public class DeptmentController extends BaseController
 		{
 			result.setCode("0");
 			result.setMessage("获取部门信息成功！");
-			response.setResponseData(deptBasicInfo);
+			response.setResponseData(deptResponseData);
 		}
 		
 		return response;
@@ -185,9 +184,9 @@ public class DeptmentController extends BaseController
 	}
 	
 	
-	@RequestMapping(value = "/getSubDepts", method = POST)
+	@RequestMapping(value = "/getPrimaryDesendentDepts", method = POST)
 	@ResponseBody
-	public Response<List<String>> getSubDepts(
+	public Response<List<DeptResponseData>> getPrimaryDesendentDepts(
 			HttpServletRequest httpRequest)
 	{
 		/*将请求json数据转换成相应的请求体*/
@@ -198,7 +197,7 @@ public class DeptmentController extends BaseController
 				gson.fromJson(json, new Json2Request<Request<DeptBasicInfo>>(){}.getType());
 
 		/*生成响应体*/
-		Response<List<String>> response = new Response<List<String>>();
+		Response<List<DeptResponseData>> response = new Response<List<DeptResponseData>>();
 		Result result = new Result();
 		response.setResult(result);
 		
@@ -207,7 +206,7 @@ public class DeptmentController extends BaseController
 		String deptId = request.getRequestData().getDeptId();
 		
 		/*获取所有的子部门*/
-		List<String> subDepts = deptService.getSubDepts(deptId, 1);
+		List<DeptResponseData> subDepts = deptService.getDesendentDepts(deptId, 1);
 		if (subDepts == null || subDepts.isEmpty())
 		{
 			result.setCode("1");
@@ -240,29 +239,21 @@ public class DeptmentController extends BaseController
 		Response<List<UserBasicInfo>> response = new Response<List<UserBasicInfo>>();
 		Result result = new Result();
 		response.setResult(result);
-		List<UserBasicInfo> userBasicInfos = new ArrayList<UserBasicInfo>();
 		
 		/*从请求体中获取部门id*/
 		String deptId = request.getRequestData().getDeptId();
 		
 		/*获取所有的子部门*/
-		List<String> userIds = deptService.getAllUserIdOfDeptExcludiingSubDeptByDeptId(deptId);
-		if (userIds == null || userIds.isEmpty())
+		List<UserBasicInfo> users = deptService.getAllUsersOfDeptExcludingSubDeptByDeptId(deptId);
+		if (users == null || users.isEmpty())
 		{
 			result.setCode("1");
 			result.setMessage("部门用户为空！");
 		} 
 		else
 		{
-			for(String eachUserIds : userIds)
-			{
-				UserBasicInfo userBasicInfo =
-						userService.getUserBasicInfoByUserId(eachUserIds);
-				userBasicInfos.add(userBasicInfo);
-			}
-			result.setCode("0");
-			result.setMessage("获取子部门成功！");
-			response.setResponseData(userBasicInfos);
+
+			response.setResponseData(users);
 		}
 		return response;
 	}

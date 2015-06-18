@@ -1,25 +1,23 @@
 package com.nationsky.seccom.uc.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.gson.Gson;
 import com.nationsky.seccom.uc.domain.*;
+import com.nationsky.seccom.uc.model.UserBasicInfo;
+import com.nationsky.seccom.uc.service.IUserService;
 import com.nationsky.seccom.uc.util.FatherToChildUtils;
+import com.nationsky.seccom.uc.util.Json2Request;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
-import com.nationsky.seccom.uc.model.UserBasicInfo;
-import com.nationsky.seccom.uc.service.IUserService;
-import com.nationsky.seccom.uc.util.Json2Request;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 @Controller
@@ -128,7 +126,7 @@ public class UserController extends BaseController{
 		response.setResult(result);
 		result.setRequestId(request.getOperId().getRequestId());
 		
-		Date updateTime = userService.updateUserBasicInfo(request);
+		Date updateTime = userService.updateUserBasicInfo(request.getRequestData());
 		if (updateTime == null)
 		{
 			result.setCode("1");
@@ -159,7 +157,7 @@ public class UserController extends BaseController{
                 }.getType());
 		
 		String userId = request.getRequestData().getUserId();
-		boolean rmUserResult = userService.deleteUserBasicInfoByUserId(userId);
+		boolean rmUserResult = userService.deleteUserByUserId(userId);
 		
 		/*设置返回数据体*/
 		Response<UserResponseData> response = new Response<UserResponseData>();

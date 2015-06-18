@@ -10,7 +10,7 @@ public class DeptResponseData
 	private String deptPhone;
 	private String deptInfo;
 	private int deptOrder;
-	private String deptLeaderId;
+	private String deptLeaderName;
 	private String status;
 	private String deptSource;
 	private String isRootDept;
@@ -41,9 +41,9 @@ public class DeptResponseData
 	{
 		return deptOrder;
 	}
-	public String getDeptLeaderId()
+	public String getDeptLeaderName()
 	{
-		return deptLeaderId;
+		return deptLeaderName;
 	}
 	public String getStatus()
 	{
@@ -93,9 +93,9 @@ public class DeptResponseData
 	{
 		this.deptOrder = deptOrder;
 	}
-	public void setDeptLeaderId(String deptLeaderId)
+	public void setDeptLeaderName(String deptLeaderName)
 	{
-		this.deptLeaderId = deptLeaderId;
+		this.deptLeaderName = deptLeaderName;
 	}
 	public void setStatus(String status)
 	{
