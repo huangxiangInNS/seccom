@@ -3,6 +3,7 @@ package com.nationsky.seccom.uc.controller;
 import com.google.gson.Gson;
 import com.nationsky.seccom.uc.domain.*;
 import com.nationsky.seccom.uc.model.UserBasicInfo;
+import com.nationsky.seccom.uc.service.IAccountService;
 import com.nationsky.seccom.uc.service.IUserService;
 import com.nationsky.seccom.uc.util.FatherToChildUtils;
 import com.nationsky.seccom.uc.util.Json2Request;
@@ -26,6 +27,8 @@ public class UserController extends BaseController{
 
 	@Autowired
 	private IUserService userService;
+	@Autowired
+	private IAccountService accountService;
 	@RequestMapping(value = "/addUser", method = POST)
 	@ResponseBody
 	public Response<UserBasicInfo> addUser(HttpServletRequest httpRequest)
@@ -193,7 +196,7 @@ public class UserController extends BaseController{
                 }.getType());
 
 		LoginInfoRequestData loginInfoRequestData = request.getRequestData();
-        String userId = userService.checkLoginInfo(loginInfoRequestData);
+        String userId = accountService.checkLoginInfo(loginInfoRequestData);
 
 		/*设置返回数据体*/
 		Response<LoginInfoResponseData> response = new Response<LoginInfoResponseData>();
@@ -241,7 +244,7 @@ public class UserController extends BaseController{
 
         try
         {
-            String userId = userService.createLoginInfo(loginInfoRequestData);
+            String userId = accountService.createLoginInfo(loginInfoRequestData);
             result.setCode("0");
             result.setMessage("用户信息创建成功！");
             LoginInfoResponseData loginInfoResponseData = new LoginInfoResponseData();
@@ -283,7 +286,7 @@ public class UserController extends BaseController{
         {
             String userId = loginInfoRequestData.getUserId();
             Map<String, Object> responseData = new HashMap<String, Object>();
-            String sign = userService.getSign(userId);
+            String sign = accountService.getSign(userId);
             responseData.put("sign", sign);
             result.setCode("0");
             result.setMessage("获取用户签名成功！");
@@ -327,7 +330,7 @@ public class UserController extends BaseController{
             String userId = (String)requestData.get("userId");
 			String loginName = (String)requestData.get("loginName");
             String sign = (String)requestData.get("sign");
-            userService.setSign(userId, loginName, sign);
+            accountService.setSign(userId, loginName, sign);
 
 			Logger logger = Logger.getLogger(this.getClass());
 			logger.info("更新用户签名成功！");

@@ -2,6 +2,7 @@ package com.nationsky.seccom.uc.service.implement;
 
 import static org.junit.Assert.*;
 
+import com.nationsky.seccom.uc.service.IAccountService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import com.nationsky.seccom.uc.service.IUserService;
 public class UserServiceImplTest
 {
 	private IUserService userService = null;
+	private IAccountService accountService = null;
 	private ClassPathXmlApplicationContext context = null;
 	
 
@@ -38,19 +40,17 @@ public class UserServiceImplTest
 	@Test
 	public void testUpdateUserBasicInfo()
 	{
-		Request<UserRequestData> request = new Request<UserRequestData>();
 		UserRequestData userRequestData = new UserRequestData();
-		request.setRequestData(userRequestData);
 
 		/*userid存在，此时返回不为空*/
 		userRequestData.setUserId("us5od1xq4ltx4jkfzx2i");
 		userRequestData.setUserEmail("15534@qq.com");
-		assertNotNull(userService.updateUserBasicInfo(request));
+		assertNotNull(userService.updateUserBasicInfo(userRequestData));
 
 		/*userid不存在，此时返回空*/
 		userRequestData.setUserId("us5od1xq4ltx4jkfzx2");
 		userRequestData.setUserEmail("15534@qq.com");
-		assertNull(userService.updateUserBasicInfo(request));
+		assertNull(userService.updateUserBasicInfo(userRequestData));
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class UserServiceImplTest
         String loginName = "huangxiang";
         String newPassword = "666666";
 
-        userService.setNewPassword(userId, loginName, newPassword);
+        accountService.setNewPassword(userId, loginName, newPassword);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class UserServiceImplTest
         String userId = "VZFZKLnSE8sNj6FCL6tVx";
         String loginName = "huangxiang";
         String newSign = "测试更新个性签名";
-        userService.setSign(userId, loginName, newSign);
+        accountService.setSign(userId, loginName, newSign);
     }
 
 }

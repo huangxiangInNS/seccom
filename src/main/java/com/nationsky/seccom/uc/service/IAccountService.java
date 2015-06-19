@@ -1,6 +1,10 @@
 package com.nationsky.seccom.uc.service;
 
 import com.nationsky.seccom.uc.domain.LoginInfoRequestData;
+import com.nationsky.seccom.uc.model.JobDict;
+import com.nationsky.seccom.uc.model.JobDictExample;
+
+import java.util.List;
 
 /**
  * Created by tiantao on 15-6-18.
@@ -39,5 +43,8 @@ public interface IAccountService {
      * @param sign
      * @return
      */
-    boolean setSign(String userId, String sign);
+    boolean setSign(String userId, String loginName, String sign);
+
+
+    boolean setNewPassword(String userId, String loginName, String newPassword);
 }

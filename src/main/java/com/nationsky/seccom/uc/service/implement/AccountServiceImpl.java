@@ -2,17 +2,21 @@ package com.nationsky.seccom.uc.service.implement;
 
 import com.nationsky.seccom.uc.dao.UserIdLoginAccountRelationMapper;
 import com.nationsky.seccom.uc.domain.LoginInfoRequestData;
+import com.nationsky.seccom.uc.model.JobDict;
+import com.nationsky.seccom.uc.model.JobDictExample;
 import com.nationsky.seccom.uc.model.UserIdLoginAccountRelation;
 import com.nationsky.seccom.uc.model.UserIdLoginAccountRelationExample;
 import com.nationsky.seccom.uc.service.IAccountService;
 import com.nationsky.seccom.uc.util.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by tiantao on 15-6-18.
  */
+@Service
 public class AccountServiceImpl implements IAccountService {
 
     @Autowired
@@ -112,18 +116,34 @@ public class AccountServiceImpl implements IAccountService {
     }
 
 
-    public boolean setSign(String userId, String sign) {
-        UserIdLoginAccountRelationExample example = new UserIdLoginAccountRelationExample();
-        example.createCriteria().andUserIdEqualTo(userId);
+    public boolean setSign(String userId, String loginName, String sign) {
+        UserIdLoginAccountRelationExample example =
+                new UserIdLoginAccountRelationExample();
+        example.createCriteria().andUserIdEqualTo(userId)
+                .andLoginNameEqualTo(loginName);
         List<UserIdLoginAccountRelation> relations =
                 userIdLoginAccountRelationMapper.selectByExample(example);
         if (relations.size() == 0) {
-            throw new RuntimeException("没有找到指定的用户！");
+            throw new RuntimeException("没有找到指定的用户或登录名！");
         } else {
             UserIdLoginAccountRelation relation = relations.get(0);
             relation.setPersonSign(sign);
-            userIdLoginAccountRelationMapper.updateByPrimaryKey(relation);
-            return true;
+            return userIdLoginAccountRelationMapper
+                    .updateByPrimaryKey(relation) > 0;
         }
+    }
+
+    @Override
+    public boolean setNewPassword(String userId, String loginName, String newPassword) {
+        UserIdLoginAccountRelationExample example =
+                new UserIdLoginAccountRelationExample();
+        example.createCriteria().andUserIdEqualTo(userId)
+                .andLoginNameEqualTo(loginName);
+        UserIdLoginAccountRelation userIdLoginAccountRelation =
+                new UserIdLoginAccountRelation();
+        userIdLoginAccountRelation.setPassword(newPassword);
+
+        return userIdLoginAccountRelationMapper
+                .updateByExampleSelective(userIdLoginAccountRelation, example) > 0;
     }
 }
