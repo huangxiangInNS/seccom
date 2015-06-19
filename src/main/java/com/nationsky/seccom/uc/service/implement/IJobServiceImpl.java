@@ -1,7 +1,8 @@
-package com.nationsky.seccom.uc.service;
+package com.nationsky.seccom.uc.service.implement;
 
 import com.nationsky.seccom.uc.dao.JobDictMapper;
 import com.nationsky.seccom.uc.model.JobDict;
+import com.nationsky.seccom.uc.service.IJobService;
 import com.nationsky.seccom.uc.util.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
