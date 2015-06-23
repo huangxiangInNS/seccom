@@ -27,6 +27,17 @@
   <description>
      Welcome to Tomcat
   </description>
+  
+  <!-- meap UserCenter start -->
+  
+  <listener>
+		<listener-class>com.nqsky.meap.manager.core.listener.StartupListener</listener-class>
+	</listener> 
+  
+  <!-- meap UserCenter end -->
+  
+  
+  
 <servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.js</url-pattern>

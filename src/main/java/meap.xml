@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:meap="http://meap.nationsky.com/schema/meap"
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+       	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://meap.nationsky.com/schema/meap http://meap.nationsky.com/schema/meap/nqsky-meap.xsd
+    	 http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       ">
+   
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:meap.properties</value>
+			</list>
+		</property>
+	</bean>
+	<context:component-scan base-package="com.nationsky.seccom.meap.usercenter./*" >
+		<context:include-filter type="regex" expression="com/.nationsky/.seccom/.meap/.*/.impl/.*"/>
+	</context:component-scan>
+	<meap:module name="${meap.module.name}"/>
+	<meap:registry address="${meap.registry.address}" />
+	<meap:protocol name="socket" port="${meap.protocol.port}" />
+	
+	<!-- <meap:service interface="com.nationsky.seccom.uc.meap.ITestUserCenter" ref="seccomusercenter" />
+	
+	<bean id="seccomusercenter" class="com.nationsky.seccom.uc.meap.impl.TestUserCenterImpl" />
+	
+	<meap:export id="testUserCenterInner" interface="com.nationsky.seccom.uc.meap.ITestUserCenterInner" ref="testUserCenterInnerBean" />
+	
+	<bean id="testUserCenterInnerBean" class="com.nationsky.seccom.uc.meap.impl.TestUserCenterInnerImpl" /> -->
+</beans>

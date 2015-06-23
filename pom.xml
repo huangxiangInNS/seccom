@@ -150,6 +150,93 @@
           <artifactId>poi-ooxml</artifactId>
           <version>3.7</version>
       </dependency>
+      
+      <!-- nqsky-meap -->
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-bootstrap</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-config</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-fstp</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-fstp-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-issues</artifactId>
+			<version>1.0.0</version>
+		</dependency> -->
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-i18n</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-monitor</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-registry</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-remote</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-rpc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-spc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-static</artifactId>
+			<version>1.0.0</version>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-manager-core</artifactId>
+			<version>1.0.0</version>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-portal</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.nqsky.meap</groupId>
+			<artifactId>nqsky-meap-user-center</artifactId>
+			<version>1.0.0</version>
+		</dependency> -->
 
 	  <dependency>
 		  <groupId>commons-beanutils</groupId>

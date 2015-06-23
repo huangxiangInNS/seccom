@@ -9,5 +9,6 @@
     ">  
 
 	<!-- 导入spring的配置文件 -->     
+     <import resource = "classpath*:meap.xml"></import>
      <import resource = "classpath*:spring_config.xml"></import>
 </beans>
