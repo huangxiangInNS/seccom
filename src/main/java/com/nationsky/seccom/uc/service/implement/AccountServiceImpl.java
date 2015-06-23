@@ -1,9 +1,10 @@
 package com.nationsky.seccom.uc.service.implement;
 
+import com.nationsky.seccom.uc.dao.CompanyInfoMapper;
 import com.nationsky.seccom.uc.dao.UserIdLoginAccountRelationMapper;
 import com.nationsky.seccom.uc.domain.LoginInfoRequestData;
-import com.nationsky.seccom.uc.model.JobDict;
-import com.nationsky.seccom.uc.model.JobDictExample;
+import com.nationsky.seccom.uc.model.CompanyInfo;
+import com.nationsky.seccom.uc.model.CompanyInfoExample;
 import com.nationsky.seccom.uc.model.UserIdLoginAccountRelation;
 import com.nationsky.seccom.uc.model.UserIdLoginAccountRelationExample;
 import com.nationsky.seccom.uc.service.IAccountService;
@@ -22,15 +23,29 @@ public class AccountServiceImpl implements IAccountService {
     @Autowired
     private UserIdLoginAccountRelationMapper userIdLoginAccountRelationMapper;
 
+    @Autowired
+    private CompanyInfoMapper companyInfoMapper;
+
 
     @Override
-    public String createLoginInfo(LoginInfoRequestData loginInfoRequestData) {
+    public String createLoginInfo(String userId, LoginInfoRequestData loginInfoRequestData) {
         if (loginInfoRequestData == null) {
             return null;
         } else {
-            /*从用户请求中获取信息*/
-            String userId = loginInfoRequestData.getUserId();
-            String companyId = loginInfoRequestData.getCompanyId();
+            /*通过公司别名找到公司id*/
+            String companyAlias = loginInfoRequestData.getCompanyAlias();
+            CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+            companyInfoExample.createCriteria().andCompanyAliasEqualTo(companyAlias);
+            List<CompanyInfo> companyInfos =
+                    companyInfoMapper.selectByExample(companyInfoExample);
+            if (companyInfos == null | companyInfos.size() == 0)
+            {
+                throw new RuntimeException("无法找到该公司别名指定的公司");
+            }
+            CompanyInfo companyInfo = companyInfos.get(0);
+            String companyId = companyInfo.getCompanyId();
+
+            /*从登录请求中获取信息*/
             String loginName = loginInfoRequestData.getLoginName();
             String password = loginInfoRequestData.getPassword();
 
@@ -46,6 +61,7 @@ public class AccountServiceImpl implements IAccountService {
             userIdLoginAccountRelation.setUserId(userId);
             userIdLoginAccountRelation.setLoginId(loginId);
 
+            //TODOloginName不能重复
 			/*插入数据库*/
             int updateCount = 0;
             updateCount =
@@ -62,16 +78,27 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public String checkLoginInfo(LoginInfoRequestData loginInfoRequestData) {
-        String companyId = loginInfoRequestData.getCompanyId();
+        String companyAlias = loginInfoRequestData.getCompanyAlias();
         String loginName = loginInfoRequestData.getLoginName();
         String password = loginInfoRequestData.getPassword();
 
+        /*通过公司别名找到公司id*/
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyAliasEqualTo(companyAlias);
+        List<CompanyInfo> companyInfos =
+                companyInfoMapper.selectByExample(companyInfoExample);
+        if (companyInfos == null | companyInfos.size() == 0)
+        {
+            throw new RuntimeException("无法找到该公司别名指定的公司！");
+        }
+        CompanyInfo companyInfo = companyInfos.get(0);
+        String companyId = companyInfo.getCompanyId();
+
+        /*找到员工id*/
         UserIdLoginAccountRelationExample example = new UserIdLoginAccountRelationExample();
         example.createCriteria().andCompanyIdEqualTo(companyId).andLoginNameEqualTo(loginName)
                 .andPasswordEqualTo(password);
-
         List<UserIdLoginAccountRelation> relations = userIdLoginAccountRelationMapper.selectByExample(example);
-
         if (relations == null) {
             return null;
         } else {

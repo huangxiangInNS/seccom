@@ -15,11 +15,11 @@ public interface IAccountService {
      * @param loginInfoRequestData
      * @return
      */
-    String createLoginInfo(LoginInfoRequestData loginInfoRequestData);
+    String createLoginInfo(String userId, LoginInfoRequestData loginInfoRequestData);
 
     /**
      * @param loginInfoRequestData
-     * @return
+     * @return 返回用户id
      */
     String checkLoginInfo(LoginInfoRequestData loginInfoRequestData);
 

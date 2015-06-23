@@ -4,18 +4,9 @@ package com.nationsky.seccom.uc.domain;
  * Created by huangxiang on 15-6-8.
  */
 public class LoginInfoRequestData {
-    private String userId;
-    private String companyId;
+    private String companyAlias;
     private String loginName;
     private String password;
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 
     public String getLoginName() {
         return loginName;
@@ -33,11 +24,11 @@ public class LoginInfoRequestData {
         this.password = password;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getCompanyAlias() {
+        return companyAlias;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCompanyAlias(String companyAlias) {
+        this.companyAlias = companyAlias;
     }
 }
