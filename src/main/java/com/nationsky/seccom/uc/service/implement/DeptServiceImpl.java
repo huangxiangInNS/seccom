@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import com.google.gson.Gson;
-import com.nationsky.seccom.uc.dao.UserBasicInfoMapper;
+import com.nationsky.seccom.uc.dao.*;
 import com.nationsky.seccom.uc.domain.DeptResponseData;
 import com.nationsky.seccom.uc.model.*;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nationsky.seccom.uc.dao.DeptBasicInfoMapper;
-import com.nationsky.seccom.uc.dao.DeptRelationMapper;
-import com.nationsky.seccom.uc.dao.UserDeptRelationMapper;
 import com.nationsky.seccom.uc.domain.DeptRequestData;
 import com.nationsky.seccom.uc.service.IDeptService;
 import com.nationsky.seccom.uc.util.ServiceUtil;
@@ -33,6 +30,9 @@ public class DeptServiceImpl implements IDeptService {
 
 	@Autowired
 	private UserBasicInfoMapper userBasicInfoMapper; // 自动注入员工信息mapper.
+
+	@Autowired
+	private DeptExtensionMapper deptExtensionMapper; // 自动注入部门扩展信息mapper.
 
 	private String addDeptBasicInfo(DeptBasicInfo departmentBasicInfo) {
 
@@ -302,6 +302,32 @@ public class DeptServiceImpl implements IDeptService {
         deptsAndUsers.put("users", users);
         Gson gson = new Gson();
         return gson.toJson(deptsAndUsers);
+    }
+
+    @Override
+    public boolean addDeptExtension(String deptId, String extensionId, String extensionValue) {
+        DeptExtension deptExtension = new DeptExtension();
+        deptExtension.setDeptId(deptId);
+        deptExtension.setExtensionId(extensionId);
+        deptExtension.setExtensionValue(extensionValue);
+
+        String deptExtensionId = ServiceUtil.getRandomString(64);
+        deptExtension.setId(deptExtensionId);
+
+        Date createDate = ServiceUtil.getCurrentTime();
+        deptExtension.setCreateTime(createDate);
+
+        return deptExtensionMapper.insert(deptExtension) > 0;
+    }
+
+    @Override
+    public int countDeptExtensionList(DeptExtensionExample deptExtensionExample) {
+        return deptExtensionMapper.countByExample(deptExtensionExample);
+    }
+
+    @Override
+    public boolean deleteDeptExtension(DeptExtensionExample deptExtensionExample) {
+        return deptExtensionMapper.deleteByExample(deptExtensionExample) > 0;
     }
 
     @Transactional

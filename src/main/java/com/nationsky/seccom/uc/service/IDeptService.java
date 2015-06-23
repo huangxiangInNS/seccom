@@ -5,9 +5,7 @@ import java.util.List;
 
 import com.nationsky.seccom.uc.domain.DeptRequestData;
 import com.nationsky.seccom.uc.domain.DeptResponseData;
-import com.nationsky.seccom.uc.model.DeptBasicInfo;
-import com.nationsky.seccom.uc.model.DeptBasicInfoExample;
-import com.nationsky.seccom.uc.model.UserBasicInfo;
+import com.nationsky.seccom.uc.model.*;
 
 public interface IDeptService {
 
@@ -90,4 +88,12 @@ public interface IDeptService {
 	 * @return
 	 */
 	String getPrimaryDesendentDeptAndUsers(String deptId);
+
+
+	boolean addDeptExtension(String deptId, String extensionId, String extensionValue);
+
+
+	int countDeptExtensionList(DeptExtensionExample deptExtensionExample);
+
+	boolean deleteDeptExtension(DeptExtensionExample deptExtensionExample);
 }

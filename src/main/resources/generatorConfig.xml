@@ -7,7 +7,7 @@
     <context id="sec_uc" targetRuntime="MyBatis3">
         <!--用于指定数据库驱动包的名字和数据库的链接信息，不同的数据库的connectionURL形式不一样-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-            connectionURL="jdbc:mysql://127.0.0.1:3306/uc"
+            connectionURL="jdbc:mysql://192.168.1.142:3306/sec_uc"
             userId="seccom_uc"
             password="netqin123">
         </jdbcConnection>
@@ -40,5 +40,8 @@
         <table schema="sc_uc" tableName="sc_uc_dept_basic" domainObjectName="DeptBasicInfo" />
         <table schema="sc_uc" tableName="sc_uc_dept_relation" domainObjectName="DeptRelation" />
         <table schema="sc_uc" tableName="sc_uc_user_dept" domainObjectName="UserDeptRelation" />
+        <table schema="sc_uc" tableName="sc_uc_user_extension" domainObjectName="UserExtension" />
+        <table schema="sc_uc" tableName="sc_uc_extension" domainObjectName="Extension" />
+        <table schema="sc_uc" tableName="sc_uc_dept_extension" domainObjectName="DeptExtension" />
   </context>
 </generatorConfiguration>
