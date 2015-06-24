@@ -16,12 +16,21 @@
 	<!-- enable annotation handler mapping -->
 	<mvc:annotation-driven/>
 
+    <bean id = "propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:jdbc.properties</value>
+        </property>
+        <property name="fileEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
 	<!-- 定义数据源 -->
      <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
-        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url"  value="jdbc:mysql://192.168.1.142:3306/sec_uc" />
-        <property name="username" value="seccom_uc" />
-        <property name="password" value="netqin123" />
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url"  value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
     </bean>
     
     <!-- 定义事务管理器 -->
