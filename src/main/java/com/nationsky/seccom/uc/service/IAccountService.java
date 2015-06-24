@@ -15,7 +15,7 @@ public interface IAccountService {
      * @param loginInfoRequestData
      * @return
      */
-    String createLoginInfo(String userId, LoginInfoRequestData loginInfoRequestData);
+    String createLoginInfo(LoginInfoRequestData loginInfoRequestData);
 
     /**
      * @param loginInfoRequestData

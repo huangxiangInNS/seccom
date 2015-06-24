@@ -7,6 +7,7 @@ public class LoginInfoRequestData {
     private String companyAlias;
     private String loginName;
     private String password;
+    private String userId;
 
     public String getLoginName() {
         return loginName;
@@ -30,5 +31,13 @@ public class LoginInfoRequestData {
 
     public void setCompanyAlias(String companyAlias) {
         this.companyAlias = companyAlias;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -28,7 +28,7 @@ public class AccountServiceImpl implements IAccountService {
 
 
     @Override
-    public String createLoginInfo(String userId, LoginInfoRequestData loginInfoRequestData) {
+    public String createLoginInfo(LoginInfoRequestData loginInfoRequestData) {
         if (loginInfoRequestData == null) {
             return null;
         } else {
@@ -58,6 +58,11 @@ public class AccountServiceImpl implements IAccountService {
             userIdLoginAccountRelation.setCreateTime(ServiceUtil.getCurrentTime());
             String loginId = ServiceUtil.getRandomString(20);
 
+            String userId = loginInfoRequestData.getUserId();
+            if (userId == null)
+            {
+                throw new RuntimeException("用户id不能为空！");
+            }
             userIdLoginAccountRelation.setUserId(userId);
             userIdLoginAccountRelation.setLoginId(loginId);
 
