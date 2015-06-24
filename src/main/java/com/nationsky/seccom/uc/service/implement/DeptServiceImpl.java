@@ -411,6 +411,10 @@ public class DeptServiceImpl implements IDeptService {
 		deptBasicInfo.setDeptName(deptRequestData.getDeptName());
 		deptBasicInfo.setDeptOrder(deptRequestData.getDeptOrder());
 		deptBasicInfo.setDeptPhone(deptRequestData.getDeptPhone());
+
+		/*插入创建时间和更新时间*/
+		deptBasicInfo.setCreateTime(ServiceUtil.getCurrentTime());
+		deptBasicInfo.setUpdateTime(ServiceUtil.getCurrentTime());
 		
 		String ancestorDeptId = deptRequestData.getAncestorDeptId();
 		if (ancestorDeptId == null  || ancestorDeptId.isEmpty())

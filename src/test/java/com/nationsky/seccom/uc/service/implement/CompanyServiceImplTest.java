@@ -56,4 +56,15 @@ public class CompanyServiceImplTest
 		fail("Not yet implemented");
 	}
 
+	@Test
+	public void testGetRootDept() throws Exception {
+		String companyId = "69459b8a-0131-4b7c-9f84-4f1139bde80a";
+		assertNotNull(companyService.getRootDept(companyId));
+	}
+
+    @Test
+    public void testCreateRootDept() throws Exception {
+        String companyId = "69459b8a-0131-4b7c-9f84-4f1139bde80a";
+        assertNotNull(companyService.createRootDept(companyId));
+    }
 }

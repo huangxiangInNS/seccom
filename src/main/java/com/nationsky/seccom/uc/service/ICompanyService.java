@@ -71,4 +71,12 @@ public interface ICompanyService {
      * @return
      */
     DeptBasicInfo getRootDept(String companyId);
+
+
+    /**
+     * 创建公司根部门
+     * @param companyId
+     * @return 部门id
+     */
+    public String createRootDept(String companyId);
 }
