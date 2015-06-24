@@ -30,15 +30,15 @@
   
   <!-- meap UserCenter start -->
   
-  <listener>
+    <!-- <listener>
 		<listener-class>com.nqsky.meap.manager.core.listener.StartupListener</listener-class>
-	</listener> 
-  
+	</listener>  -->
+  	
   <!-- meap UserCenter end -->
   
   
   
-<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.js</url-pattern>
 	</servlet-mapping>
@@ -55,7 +55,6 @@
  <welcome-file-list>
        <welcome-file>login.jsp</welcome-file>
  </welcome-file-list>
- 
  
  
  
