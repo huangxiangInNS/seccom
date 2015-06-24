@@ -22,7 +22,7 @@ public class IJobServiceImpl implements IJobService {
     public String createJob(String companyId, String jobName) {
         JobDict jobDict = new JobDict();
         jobDict.setCompanyId(companyId);
-        String jobId = ServiceUtil.getRandomString(4);
+        String jobId = ServiceUtil.getUUID();
         jobDict.setJobId(jobId);
         jobDict.setJobName(jobName);
         return jobDictMapper.insert(jobDict) > 0 ? jobId : null;

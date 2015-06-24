@@ -44,7 +44,7 @@ public class DeptServiceImpl implements IDeptService {
 		{
 			
 			//生成部门id
-			String deptId = ServiceUtil.getRandomString(8);
+			String deptId = ServiceUtil.getUUID();
 			departmentBasicInfo.setDeptId(deptId);
 			
 			// 设置部门状态为默认值
@@ -311,7 +311,7 @@ public class DeptServiceImpl implements IDeptService {
         deptExtension.setExtensionId(extensionId);
         deptExtension.setExtensionValue(extensionValue);
 
-        String deptExtensionId = ServiceUtil.getRandomString(64);
+        String deptExtensionId = ServiceUtil.getUUID();
         deptExtension.setId(deptExtensionId);
 
         Date createDate = ServiceUtil.getCurrentTime();

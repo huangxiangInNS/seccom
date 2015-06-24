@@ -69,7 +69,7 @@ public class AdminLoginController extends BaseController{
 			AdminLogin adminLogin = new AdminLogin();
 			String loginIp = httpRequest.getLocalAddr();
 			
-			String id = ServiceUtil.getRandomString(12);
+			String id = ServiceUtil.getUUID();
 			adminLogin.setAdminId(id);
 			adminLogin.setLoginArea(null);
 			adminLogin.setLoginIp(loginIp);

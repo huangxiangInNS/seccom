@@ -230,7 +230,7 @@ public class CompanyServiceImpl implements ICompanyService {
             companyInfo.setCompanyUrl(requestData.getCompanyUrl());
 
             //生成公司id
-            companyInfo.setCompanyId(ServiceUtil.getRandomString(8));
+            companyInfo.setCompanyId(ServiceUtil.getUUID());
 
             //生成创建时间和更新时间
             Date currentTime = ServiceUtil.getCurrentTime();

@@ -2,6 +2,7 @@ package com.nationsky.seccom.uc.util;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 public class ServiceUtil {
 	
@@ -36,5 +37,11 @@ public class ServiceUtil {
 	public static Date getCurrentTime()
 	{
 		return new Date(System.currentTimeMillis());
+	}
+
+
+	public static String getUUID()
+	{
+		return UUID.randomUUID().toString();
 	}
 }

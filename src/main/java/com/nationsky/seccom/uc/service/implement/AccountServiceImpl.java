@@ -56,7 +56,7 @@ public class AccountServiceImpl implements IAccountService {
             userIdLoginAccountRelation.setLoginName(loginName);
             userIdLoginAccountRelation.setPassword(password);
             userIdLoginAccountRelation.setCreateTime(ServiceUtil.getCurrentTime());
-            String loginId = ServiceUtil.getRandomString(20);
+            String loginId = ServiceUtil.getUUID(); // 使用uuid作为id
 
             String userId = loginInfoRequestData.getUserId();
             if (userId == null)

@@ -194,7 +194,7 @@ public class ImportServiceImpl implements IimportService {
 
                 Row row = sheet.getRow(i);
                 UserBasicInfo userBasicInfo = new UserBasicInfo();
-                userBasicInfo.setUserId(ServiceUtil.getRandomString(12));
+                userBasicInfo.setUserId(ServiceUtil.getUUID());
                 userBasicInfo.setCreateTime(new Date());
                 userBasicInfo.setUpdateTime(new Date());
                 userBasicInfo.setRealName(row.getCell(0).getStringCellValue());
@@ -236,7 +236,7 @@ public class ImportServiceImpl implements IimportService {
         userIdLoginAccountRelation.setCompanyId(companyId);
         userIdLoginAccountRelation.setUserId(userBasicInfo.getUserId());
         userIdLoginAccountRelation.setCreateTime(new Date());
-        userIdLoginAccountRelation.setLoginId(ServiceUtil.getRandomString(12));
+        userIdLoginAccountRelation.setLoginId(ServiceUtil.getUUID());
         userIdLoginAccountRelation.setLoginName(userName);
         userIdLoginAccountRelation.setPassword("123456");
         //userIdLoginAccountRelationMapper.insert(userIdLoginAccountRelation);
@@ -246,7 +246,7 @@ public class ImportServiceImpl implements IimportService {
     private void addUserJobToList(String userJob) {
         if (!userJobHashtable.containsKey(userJob)) {
             JobDict jobDict = new JobDict();
-            jobDict.setJobId(ServiceUtil.getRandomString(4));
+            jobDict.setJobId(ServiceUtil.getUUID());
             jobDict.setJobName(userJob);
             jobDict.setCompanyId(companyId);
             userJobHashtable.put(userJob, jobDict);
@@ -293,7 +293,7 @@ public class ImportServiceImpl implements IimportService {
                 deptBasicInfo.setCreateTime(new Date());
                 deptBasicInfo.setUpdateTime(new Date());
                 deptBasicInfo.setCompanyId("");
-                deptBasicInfo.setDeptId(ServiceUtil.getRandomString(12));
+                deptBasicInfo.setDeptId(ServiceUtil.getUUID());
                 deptBasicInfo.setDeptName(row.getCell(0).getStringCellValue());
                 deptBasicInfo.setDeptPhone(String.valueOf(row.getCell(2).getNumericCellValue()));
                 if (row.getCell(3) != null) {

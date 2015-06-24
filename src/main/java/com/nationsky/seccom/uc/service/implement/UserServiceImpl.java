@@ -250,7 +250,7 @@ public class UserServiceImpl implements IUserService {
 
     private String generateUniqueUserId() {
         // 可以选择别的id产生方式。
-        return ServiceUtil.getRandomString(20);
+        return ServiceUtil.getUUID();
     }
 
 
