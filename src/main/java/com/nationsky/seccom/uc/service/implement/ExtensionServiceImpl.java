@@ -4,7 +4,6 @@ import com.nationsky.seccom.uc.dao.ExtensionMapper;
 import com.nationsky.seccom.uc.model.Extension;
 import com.nationsky.seccom.uc.model.ExtensionExample;
 import com.nationsky.seccom.uc.service.IExtensionService;
-import com.sun.jndi.cosnaming.ExceptionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
